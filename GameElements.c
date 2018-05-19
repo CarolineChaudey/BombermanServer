@@ -7,7 +7,7 @@ struct Bomb {
 } bomb;
 
 struct Player {
-    char color[6]; // rgb
+    char color[4]; // rgb
 } player;
 
 struct Square {
