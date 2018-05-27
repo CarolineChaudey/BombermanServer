@@ -1,8 +1,3 @@
-/*
-/	Etude d'un serveur ECHO
-/	Code du client
-*/
-
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netdb.h>
@@ -29,21 +24,13 @@ int main(int argc,char **argv)
     printf("connect\n");
     connect(sockfd,(struct sockaddr *)&servaddr,sizeof(servaddr));
  
-    //while(1)
-    //{
-        //printf("operations\n");
-        bzero( sendline, 100);
-        bzero( recvline, 100);
-        sendline[0] = 'h';
-        //printf("fgets\n");
-        //fgets(sendline,100,stdin); /*stdin pour l'input standard*/
+    bzero( sendline, 100);
+    bzero( recvline, 100);
 
-        printf("write\n");
-        write(sockfd,sendline,strlen(sendline)+1);
-        printf("finished write\n");
-        //printf("read\n");
-        //read(sockfd,recvline,100);
-        //printf("%s",recvline);
-    //}
+    printf("write\n");
+    write(sockfd, "get rooms", 11);
+    printf("read\n");
+    read(sockfd, recvline, 100);
+    printf("%s\n", recvline);
  
 }

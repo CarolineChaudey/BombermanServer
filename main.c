@@ -6,12 +6,13 @@
 #include <unistd.h>
 #include <stdlib.h>
 
+const int NB_ROOM = 2;
+
 void treatRequest();
 
 int main() {
     int sock_listen_fd, sock_conn_fd;
     struct sockaddr_in servaddr;
-    const int NB_ROOM = 2;
     char client_query[100];
 
     if ((sock_listen_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
@@ -48,20 +49,22 @@ int main() {
     printf("Reading request\n");
     read(sock_conn_fd, client_query, 100);
     printf("%s\n", client_query);
-    //write(sock_conn_fd, "test", strlen(client_query)+1);
+    treatRequest(sock_conn_fd, client_query);
 
-/*
-    while(1) {
-        printf("loop");
-        bzero(client_query, 100);
-        read(sock_conn_fd, client_query, 100);
-        //printf("Echoing back - %s",str);
-        write(sock_conn_fd, client_query, strlen(client_query)+1);
-    }
-*/
     return 0;
 }
 
-void treatRequest() {
+void treatRequest(int socket_fd, char* req) {
+    const char* ROOMS_DATA = "get rooms";
 
+    char response[20];
+    sprintf(response, "there is %d rooms", NB_ROOM);
+    write(socket_fd, response, strlen(response)+1);
+/*
+    if (req == ROOMS_DATA) {
+        printf("There is %d rooms\n", NB_ROOM);
+    } else {
+        printf("Sorry I don't understand\n");
+    }
+*/
 }
