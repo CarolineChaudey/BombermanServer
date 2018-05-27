@@ -17,3 +17,8 @@ struct Square {
 struct Playground {
     struct Square matrix[20]; // 10x10
 } playground;
+
+struct Room {
+    struct Playground playground;
+    struct Player players[4];
+} room;
