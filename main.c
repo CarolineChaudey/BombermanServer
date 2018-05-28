@@ -5,12 +5,29 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include "GameElements.c"
 
 const int NB_ROOM = 2;
+struct Room rooms[2];
 
 void treatRequest();
 
+void initRooms() {
+    for (int i = 0; i < 4; i++) {
+        struct Room room;
+        struct Player playersTab[4];
+        struct Playground playground;
+        room.id = i;
+        room.playground = playground;
+        room.players = playersTab;
+
+        rooms[i] = room;
+    }
+}
+
 int main() {
+    initRooms();
+
     int sock_listen_fd, sock_conn_fd;
     struct sockaddr_in servaddr;
     char client_query[100];
@@ -61,5 +78,4 @@ void treatRequest(int socket_fd, char* req) {
         char response[20] = "Unknown instruction";
         write(socket_fd, response, strlen(response)+1);
     }
-
 }

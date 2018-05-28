@@ -20,6 +20,7 @@ struct Playground {
 } playground;
 
 struct Room {
+    int id;
     struct Playground playground;
-    struct Player players[4];
+    struct Player* players;
 } room;
