@@ -21,15 +21,12 @@ int main(int argc,char **argv)
  
     inet_pton(AF_INET,"127.0.0.1",&(servaddr.sin_addr));
  
-    printf("connect\n");
     connect(sockfd,(struct sockaddr *)&servaddr,sizeof(servaddr));
  
     bzero( sendline, 100);
     bzero( recvline, 100);
 
-    printf("write\n");
-    write(sockfd, "get rooms", 11);
-    printf("read\n");
+    write(sockfd, "get-rooms", 11);
     read(sockfd, recvline, 100);
     printf("%s\n", recvline);
  

@@ -27,7 +27,6 @@ int main() {
     servaddr.sin_port = htons(8081);
 
     // bind listen socket and the server params
-    printf("Binding socket ...\n");
     if (bind(sock_listen_fd, (struct sockaddr *) &servaddr, sizeof(servaddr)) < 0) {
         perror("bind failed");
         exit(EXIT_FAILURE);
@@ -35,36 +34,32 @@ int main() {
 
     // total players = rooms * players_per_rooms = 2 * 4 = 8
     // so 10 connections in the queue is ok
-    printf("Listening ...\n");
     if (listen(sock_listen_fd, 10) < 0) {
         perror("listening to socket failed");
         exit(EXIT_FAILURE);
     }
 
     // taking first connection request
-    printf("Taking first connection...\n");
     sock_conn_fd = accept(sock_listen_fd, (struct sockaddr*) NULL, NULL);
 
     bzero(client_query, 100);
-    printf("Reading request\n");
     read(sock_conn_fd, client_query, 100);
-    printf("%s\n", client_query);
+    printf("Received %s\n", client_query);
     treatRequest(sock_conn_fd, client_query);
 
     return 0;
 }
 
 void treatRequest(int socket_fd, char* req) {
-    const char* ROOMS_DATA = "get rooms";
+    const char* ROOMS_DATA = "get-rooms";
 
-    char response[20];
-    sprintf(response, "there is %d rooms", NB_ROOM);
-    write(socket_fd, response, strlen(response)+1);
-/*
-    if (req == ROOMS_DATA) {
-        printf("There is %d rooms\n", NB_ROOM);
+    if (strcmp(req, ROOMS_DATA) == 0) {
+        char response[20];
+        sprintf(response, "there is %d rooms", NB_ROOM);
+        write(socket_fd, response, strlen(response)+1);
     } else {
-        printf("Sorry I don't understand\n");
+        char response[20] = "Unknown instruction";
+        write(socket_fd, response, strlen(response)+1);
     }
-*/
+
 }
