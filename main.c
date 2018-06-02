@@ -16,35 +16,36 @@ void treatRequest();
 int getNbPlayers(struct Room* room) {
     int res = 0;
     for (int i = 0; i < room->maxPlayers; i++) {
-        if (NULL != &room->players[i]) {
+        if (room->players[i].nb != 0) {
             res++;
         }
     }
     return res;
 }
 
-char* getRoomsAnswer() {
+void getRoomsAnswer(char* response) {
     // format : "id:nbPlayers/nbPlayerMax"
-    int length = NB_ROOM * 6;
-    char response[length];
     strcpy(response, "");
     for (int i = 0; i < NB_ROOM; i++) {
         char room[6];
-        room[0] = rooms[i].id;
+        room[0] = rooms[i].id + '0';
         room[1] = ':';
-        room[2] = getNbPlayers(&rooms[i]);
+        room[2] = getNbPlayers(&rooms[i]) + '0';
         room[3] = '/';
-        room[4] = rooms[i].maxPlayers;
+        room[4] = rooms[i].maxPlayers + '0';
         room[5] = ';';
         strcat(response, room);
     }
-    return response;
 }
 
 void initRooms() {
     for (int i = 0; i < NB_ROOM; i++) {
         struct Room room;
-        struct Player playersTab[4];
+        //struct Player playersTab[4] = {NULL};
+        struct Player* playersTab = malloc(sizeof(struct Player) * 4);
+        for(int i = 0; i < 4; i++){
+            playersTab[i].nb = 0;
+        }
         struct Playground playground;
         room.id = i;
         room.playground = playground;
@@ -99,13 +100,17 @@ int main() {
 
 void treatRequest(int socket_fd, char* req) {
     const char* ROOMS_DATA = "get-rooms";
-
     if (strcmp(req, ROOMS_DATA) == 0) {
-        char response[20];
+       // char response[20];
         //sprintf(response, "there is %d rooms", NB_ROOM);
-        int length = NB_ROOM * 6;
-        char* response = getRoomsAnswer();
+        int nb_char = NB_ROOM * 6;
+
+        char* response;
+        response = malloc(sizeof(char) * nb_char);
+        
+        getRoomsAnswer(response);
         write(socket_fd, response, strlen(response)+1);
+        free(response);
     } else {
         char response[20] = "Unknown instruction";
         write(socket_fd, response, strlen(response)+1);
