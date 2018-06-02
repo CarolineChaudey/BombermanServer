@@ -1,15 +1,6 @@
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <netdb.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
-#include <stdlib.h>
 #include "GameElements.c"
+#include "Game.h"
 
-const int NB_ROOM = 2;
-const int MAX_PLAYERS = 4;
-struct Room rooms[2];
 
 void treatRequest();
 
