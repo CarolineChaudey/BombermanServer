@@ -8,18 +8,48 @@
 #include "GameElements.c"
 
 const int NB_ROOM = 2;
+const int MAX_PLAYERS = 4;
 struct Room rooms[2];
 
 void treatRequest();
 
+int getNbPlayers(struct Room* room) {
+    int res = 0;
+    for (int i = 0; i < room->maxPlayers; i++) {
+        if (NULL != &room->players[i]) {
+            res++;
+        }
+    }
+    return res;
+}
+
+char* getRoomsAnswer() {
+    // format : "id:nbPlayers/nbPlayerMax"
+    int length = NB_ROOM * 6;
+    char response[length];
+    strcpy(response, "");
+    for (int i = 0; i < NB_ROOM; i++) {
+        char room[6];
+        room[0] = rooms[i].id;
+        room[1] = ':';
+        room[2] = getNbPlayers(&rooms[i]);
+        room[3] = '/';
+        room[4] = rooms[i].maxPlayers;
+        room[5] = ';';
+        strcat(response, room);
+    }
+    return response;
+}
+
 void initRooms() {
-    for (int i = 0; i < 4; i++) {
+    for (int i = 0; i < NB_ROOM; i++) {
         struct Room room;
         struct Player playersTab[4];
         struct Playground playground;
         room.id = i;
         room.playground = playground;
         room.players = playersTab;
+        room.maxPlayers = MAX_PLAYERS;
 
         rooms[i] = room;
     }
@@ -72,7 +102,9 @@ void treatRequest(int socket_fd, char* req) {
 
     if (strcmp(req, ROOMS_DATA) == 0) {
         char response[20];
-        sprintf(response, "there is %d rooms", NB_ROOM);
+        //sprintf(response, "there is %d rooms", NB_ROOM);
+        int length = NB_ROOM * 6;
+        char* response = getRoomsAnswer();
         write(socket_fd, response, strlen(response)+1);
     } else {
         char response[20] = "Unknown instruction";

@@ -23,4 +23,5 @@ struct Room {
     int id;
     struct Playground playground;
     struct Player* players;
+    int maxPlayers;
 } room;
