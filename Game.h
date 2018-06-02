@@ -11,3 +11,5 @@
 
 
 struct Room rooms[2];
+
+int getNbPlayers(struct Room* room);
