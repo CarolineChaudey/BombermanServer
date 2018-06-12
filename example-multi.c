@@ -8,6 +8,8 @@
 #define PORT 8000
 #define MAXSZ 100
 
+// SOURCE https://clinuxcode.blogspot.com/2014/02/concurrent-server-handling-multiple.html
+
 int main()
 {
  int sockfd;//to create socket
