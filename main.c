@@ -23,7 +23,6 @@ void getRoomsAnswer(char* response) {
 void initRooms() {
     for (int i = 0; i < NB_ROOM; i++) {
         struct Room room;
-        //struct Player playersTab[4] = {NULL};
         struct Player* playersTab = malloc(sizeof(struct Player) * 4);
         for(int i = 0; i < 4; i++){
             playersTab[i].nb = 0;
@@ -32,7 +31,7 @@ void initRooms() {
         room.id = i;
         room.playground = playground;
         room.players = playersTab;
-        room.maxPlayers = MAX_PLAYERS;
+        room.maxPlayers = MAX_PLAYERS_PER_ROOM;
 
         rooms[i] = room;
     }
