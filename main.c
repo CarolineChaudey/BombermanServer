@@ -69,13 +69,15 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    // taking first connection request
-    sock_conn_fd = accept(sock_listen_fd, (struct sockaddr*) NULL, NULL);
-
-    bzero(client_query, 100);
-    read(sock_conn_fd, client_query, 100);
-    printf("Received %s\n", client_query);
-    treatRequest(sock_conn_fd, client_query);
+    // listen to clients
+    while(1)
+    {
+        sock_conn_fd = accept(sock_listen_fd, (struct sockaddr*) NULL, NULL);
+        bzero(client_query, 100);
+        read(sock_conn_fd, client_query, 100);
+        printf("Received %s\n", client_query);
+        treatRequest(sock_conn_fd, client_query);
+    }
 
     return 0;
 }
