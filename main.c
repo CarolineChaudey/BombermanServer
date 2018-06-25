@@ -9,7 +9,6 @@ int main() {
 
     int sock_listen_fd, sock_conn_fd;
     struct sockaddr_in servaddr;
-    char client_query[100];
 
     if ((sock_listen_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
         perror("socket creation failed");
@@ -39,21 +38,19 @@ int main() {
     while(1)
     {
         sock_conn_fd = accept(sock_listen_fd, (struct sockaddr*) NULL, NULL);
-        bzero(client_query, 100);
-        read(sock_conn_fd, client_query, 100);
-        printf("Received %s\n", client_query);
-        treatRequest(sock_conn_fd, client_query);
+        treatRequest(sock_conn_fd);
     }
 
     return 0;
 }
 
-void treatRequest(int socket_fd, char* req) {
+void treatRequest(int socket_fd/*, char* req*/) {
     int nb_char = NB_ROOM * 6;
-    char* response;
-    response = malloc(sizeof(char) * nb_char);
-        
-    getLobbiesInfo(response);
-    write(socket_fd, response, strlen(response)+1);
-    free(response);
+    char* lobbyInfoResponse;
+    lobbyInfoResponse = malloc(sizeof(char) * nb_char);
+
+    // give lobbies info to client
+    getLobbiesInfo(lobbyInfoResponse);
+    write(socket_fd, lobbyInfoResponse, strlen(lobbyInfoResponse)+1);
+    free(lobbyInfoResponse);
 }
