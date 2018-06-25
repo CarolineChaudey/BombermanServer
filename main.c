@@ -5,7 +5,8 @@
 void treatRequest();
 
 int main() {
-    initRooms();
+    initLobbies();
+    //initRooms();
 
     int sock_listen_fd, sock_conn_fd;
     struct sockaddr_in servaddr;

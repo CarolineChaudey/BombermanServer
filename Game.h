@@ -11,7 +11,9 @@
 
 
 struct Room rooms[2];
+struct Lobby lobbies[2];
 
 int getNbPlayers(struct Room* room);
 void getRoomsAnswer(char* response);
 void initRooms();
+void initLobbies();

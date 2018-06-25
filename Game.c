@@ -41,3 +41,21 @@ void initRooms() {
         rooms[i] = room;
     }
 }
+
+void initLobbies() {
+    for (int i = 0; i < NB_ROOM; i++) {
+        struct Lobby lobby;
+        lobby.client_1_socket_fd = -1;
+        lobby.client_2_socket_fd = -1;
+        lobby.client_3_socket_fd = -1;
+        lobby.client_4_socket_fd = -1;
+        lobbies[i] = lobby;
+    }
+}
+
+int isLobbyReady(struct Lobby lobby) {
+    return (lobby.client_1_socket_fd >= 0) 
+        && (lobby.client_2_socket_fd >= 0) 
+        && (lobby.client_3_socket_fd >= 0) 
+        && (lobby.client_4_socket_fd >= 0);
+}

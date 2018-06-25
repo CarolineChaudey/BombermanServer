@@ -25,3 +25,10 @@ struct Room {
     struct Player* players;
     int maxPlayers;
 } room;
+
+struct Lobby {
+    int client_1_socket_fd;
+    int client_2_socket_fd;
+    int client_3_socket_fd;
+    int client_4_socket_fd;
+} lobby;
