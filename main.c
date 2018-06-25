@@ -6,7 +6,6 @@ void treatRequest();
 
 int main() {
     initLobbies();
-    //initRooms();
 
     int sock_listen_fd, sock_conn_fd;
     struct sockaddr_in servaddr;
@@ -50,20 +49,11 @@ int main() {
 }
 
 void treatRequest(int socket_fd, char* req) {
-    const char* ROOMS_DATA = "get-rooms";
-    if (strcmp(req, ROOMS_DATA) == 0) {
-       // char response[20];
-        //sprintf(response, "there is %d rooms", NB_ROOM);
-        int nb_char = NB_ROOM * 6;
-
-        char* response;
-        response = malloc(sizeof(char) * nb_char);
+    int nb_char = NB_ROOM * 6;
+    char* response;
+    response = malloc(sizeof(char) * nb_char);
         
-        getRoomsAnswer(response);
-        write(socket_fd, response, strlen(response)+1);
-        free(response);
-    } else {
-        char response[20] = "Unknown instruction";
-        write(socket_fd, response, strlen(response)+1);
-    }
+    getLobbiesInfo(response);
+    write(socket_fd, response, strlen(response)+1);
+    free(response);
 }

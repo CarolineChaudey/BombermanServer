@@ -1,44 +1,28 @@
 #include "Game.h"
 
-int getNbPlayers(struct Room* room) {
+int getNbPlayers(struct Lobby* lobby) {
     int res = 0;
-    for (int i = 0; i < room->maxPlayers; i++) {
-        if (room->players[i].nb != 0) {
+    int clients[4] = {lobby->client_1_socket_fd, lobby->client_2_socket_fd, 
+        lobby->client_3_socket_fd, lobby->client_4_socket_fd};
+    for (int i = 0; i < 4; i++) {
+        if (clients[i] >= 0) {
             res++;
         }
     }
     return res;
 }
 
-void getRoomsAnswer(char* response) {
-    // format : "id:nbPlayers/nbPlayerMax"
+void getLobbiesInfo(char* response) {
     strcpy(response, "");
     for (int i = 0; i < NB_ROOM; i++) {
-        char room[6];
-        room[0] = rooms[i].id + '0';
-        room[1] = ':';
-        room[2] = getNbPlayers(&rooms[i]) + '0';
-        room[3] = '/';
-        room[4] = rooms[i].maxPlayers + '0';
-        room[5] = ';';
-        strcat(response, room);
-    }
-}
-
-void initRooms() {
-    for (int i = 0; i < NB_ROOM; i++) {
-        struct Room room;
-        struct Player* playersTab = malloc(sizeof(struct Player) * 4);
-        for(int i = 0; i < 4; i++){
-            playersTab[i].nb = 0;
-        }
-        struct Playground playground;
-        room.id = i;
-        room.playground = playground;
-        room.players = playersTab;
-        room.maxPlayers = MAX_PLAYERS_PER_ROOM;
-
-        rooms[i] = room;
+        char lobby[6];
+        lobby[0] = i + 1 + '0'; // lobby nb begins at 1
+        lobby[1] = ':';
+        lobby[2] = getNbPlayers(&lobbies[i]) + '0';
+        lobby[3] = '/';
+        lobby[4] = '4';
+        lobby[5] = ';';
+        strcat(response, lobby);
     }
 }
 
