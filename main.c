@@ -48,9 +48,24 @@ void treatRequest(int socket_fd/*, char* req*/) {
     int nb_char = NB_ROOM * 6;
     char* lobbyInfoResponse;
     lobbyInfoResponse = malloc(sizeof(char) * nb_char);
+    char chosenLobbyId[10];
+    char recvline[10];
 
     // give lobbies info to client
+    read(socket_fd, recvline, 10);
     getLobbiesInfo(lobbyInfoResponse);
     write(socket_fd, lobbyInfoResponse, strlen(lobbyInfoResponse)+1);
     free(lobbyInfoResponse);
+
+    // get lobby choice from client
+    bzero(chosenLobbyId, 10);
+    
+    //int i = 0;
+    do {
+        read(socket_fd, chosenLobbyId, 10);
+        printf("%s\n", chosenLobbyId);
+        //i++;
+    } while(strcmp(chosenLobbyId, "%") == 0);
+
+    printf("lobby choosed : %s\n", chosenLobbyId);
 }
