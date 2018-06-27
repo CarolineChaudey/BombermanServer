@@ -60,12 +60,21 @@ void treatRequest(int socket_fd/*, char* req*/) {
     // get lobby choice from client
     bzero(chosenLobbyId, 10);
     
-    //int i = 0;
     do {
         read(socket_fd, chosenLobbyId, 10);
         printf("%s\n", chosenLobbyId);
-        //i++;
     } while(strcmp(chosenLobbyId, "%") == 0);
 
     printf("lobby choosed : %s\n", chosenLobbyId);
+    int lobbyId = atoi(chosenLobbyId);
+    int lobbyRes = putClientInLobby(socket_fd, lobbyId);
+    if (!lobbyRes) {
+        // failed
+    }
+
+    char infos[15];
+    getLobbiesInfo(infos);
+    printf("%s\n", infos);
+
+    // check if lobby ready
 }
