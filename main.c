@@ -74,7 +74,9 @@ void* treatRequest(/*int socket_fd*/void* arg) {
     int lobbyId = atoi(chosenLobbyId);
     int lobbyRes = putClientInLobby(socket_fd, lobbyId);
     if (!lobbyRes) {
-        // failed
+        write(socket_fd, "NOK", 4);
+    } else {
+        write(socket_fd, "OK", 3);
     }
 
     char infos[15];
