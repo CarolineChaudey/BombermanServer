@@ -40,7 +40,6 @@ int main() {
     {
         sock_conn_fd = accept(sock_listen_fd, (struct sockaddr*) NULL, NULL);
         printf("socket id = %d\n", sock_conn_fd);
-        //treatRequest(sock_conn_fd);
         pthread_t tid;
         pthread_create(&tid, NULL, &treatRequest, (void*) sock_conn_fd );
     }
