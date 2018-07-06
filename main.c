@@ -1,49 +1,15 @@
 #include "GameElements.c"
 #include "Game.c"
+#include <pthread.h>
 
 
-void treatRequest();
-
-
-void getRoomsAnswer(char* response) {
-    // format : "id:nbPlayers/nbPlayerMax"
-    strcpy(response, "");
-    for (int i = 0; i < NB_ROOM; i++) {
-        char room[6];
-        room[0] = rooms[i].id + '0';
-        room[1] = ':';
-        room[2] = getNbPlayers(&rooms[i]) + '0';
-        room[3] = '/';
-        room[4] = rooms[i].maxPlayers + '0';
-        room[5] = ';';
-        strcat(response, room);
-    }
-}
-
-void initRooms() {
-    for (int i = 0; i < NB_ROOM; i++) {
-        struct Room room;
-        //struct Player playersTab[4] = {NULL};
-        struct Player* playersTab = malloc(sizeof(struct Player) * 4);
-        for(int i = 0; i < 4; i++){
-            playersTab[i].nb = 0;
-        }
-        struct Playground playground;
-        room.id = i;
-        room.playground = playground;
-        room.players = playersTab;
-        room.maxPlayers = MAX_PLAYERS;
-
-        rooms[i] = room;
-    }
-}
+void* treatRequest();
 
 int main() {
-    initRooms();
+    initLobbies();
 
     int sock_listen_fd, sock_conn_fd;
     struct sockaddr_in servaddr;
-    char client_query[100];
 
     if ((sock_listen_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {
         perror("socket creation failed");
@@ -69,32 +35,53 @@ int main() {
         exit(EXIT_FAILURE);
     }
 
-    // taking first connection request
-    sock_conn_fd = accept(sock_listen_fd, (struct sockaddr*) NULL, NULL);
-
-    bzero(client_query, 100);
-    read(sock_conn_fd, client_query, 100);
-    printf("Received %s\n", client_query);
-    treatRequest(sock_conn_fd, client_query);
+    // listen to clients
+    while(1)
+    {
+        sock_conn_fd = accept(sock_listen_fd, (struct sockaddr*) NULL, NULL);
+        printf("socket id = %d\n", sock_conn_fd);
+        pthread_t tid;
+        pthread_create(&tid, NULL, &treatRequest, (void*) sock_conn_fd );
+    }
 
     return 0;
 }
 
-void treatRequest(int socket_fd, char* req) {
-    const char* ROOMS_DATA = "get-rooms";
-    if (strcmp(req, ROOMS_DATA) == 0) {
-       // char response[20];
-        //sprintf(response, "there is %d rooms", NB_ROOM);
-        int nb_char = NB_ROOM * 6;
+void* treatRequest(/*int socket_fd*/void* arg) {
+    //printf("%d\n", (int) arg);
+    int socket_fd = (int) arg;
+    int nb_char = NB_ROOM * 6;
+    char* lobbyInfoResponse;
+    lobbyInfoResponse = malloc(sizeof(char) * nb_char);
+    char chosenLobbyId[10];
+    char recvline[10];
 
-        char* response;
-        response = malloc(sizeof(char) * nb_char);
-        
-        getRoomsAnswer(response);
-        write(socket_fd, response, strlen(response)+1);
-        free(response);
-    } else {
-        char response[20] = "Unknown instruction";
-        write(socket_fd, response, strlen(response)+1);
+    // give lobbies info to client
+    read(socket_fd, recvline, 10);
+    getLobbiesInfo(lobbyInfoResponse);
+    write(socket_fd, lobbyInfoResponse, strlen(lobbyInfoResponse)+1);
+    free(lobbyInfoResponse);
+
+    // get lobby choice from client
+    bzero(chosenLobbyId, 10);
+    
+    do {
+        read(socket_fd, chosenLobbyId, 10);
+        printf("%s\n", chosenLobbyId);
+    } while(strcmp(chosenLobbyId, "%") == 0);
+
+    printf("lobby choosed : %s\n", chosenLobbyId);
+    int lobbyId = atoi(chosenLobbyId);
+    int lobbyRes = putClientInLobby(socket_fd, lobbyId);
+    if (!lobbyRes) {
+        // failed
     }
+
+    char infos[15];
+    getLobbiesInfo(infos);
+    printf("%s\n", infos);
+
+    // check if lobby ready
+
+    return NULL;
 }
