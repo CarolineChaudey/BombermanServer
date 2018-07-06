@@ -84,6 +84,9 @@ void* treatRequest(/*int socket_fd*/void* arg) {
     printf("%s\n", infos);
 
     // check if lobby ready
+    if (isLobbyReady(*getLobbyById(lobbyId))) {
+        game();
+    }
 
     return NULL;
 }

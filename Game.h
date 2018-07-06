@@ -14,6 +14,8 @@ struct Room rooms[2];
 struct Lobby lobbies[2];
 
 int getNbPlayers(struct Lobby* lobby);
+struct Lobby* getLobbyById(int id);
 void getLobbiesInfo(char* response);
 void initLobbies();
 int isLobbyReady(struct Lobby lobby);
+void game();

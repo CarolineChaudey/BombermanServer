@@ -1,5 +1,9 @@
 #include "Game.h"
 
+void game() {
+    printf("Game begins.\n");
+}
+
 int getNbPlayers(struct Lobby* lobby) {
     int res = 0;
     int clients[4] = {lobby->client_1_socket_fd, lobby->client_2_socket_fd, 
