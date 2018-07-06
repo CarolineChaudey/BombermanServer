@@ -1,8 +1,9 @@
 #include "GameElements.c"
 #include "Game.c"
+#include <pthread.h>
 
 
-void treatRequest();
+void* treatRequest();
 
 int main() {
     initLobbies();
@@ -38,13 +39,18 @@ int main() {
     while(1)
     {
         sock_conn_fd = accept(sock_listen_fd, (struct sockaddr*) NULL, NULL);
-        treatRequest(sock_conn_fd);
+        printf("socket id = %d\n", sock_conn_fd);
+        //treatRequest(sock_conn_fd);
+        pthread_t tid;
+        pthread_create(&tid, NULL, &treatRequest, (void*) sock_conn_fd );
     }
 
     return 0;
 }
 
-void treatRequest(int socket_fd/*, char* req*/) {
+void* treatRequest(/*int socket_fd*/void* arg) {
+    //printf("%d\n", (int) arg);
+    int socket_fd = (int) arg;
     int nb_char = NB_ROOM * 6;
     char* lobbyInfoResponse;
     lobbyInfoResponse = malloc(sizeof(char) * nb_char);
@@ -77,4 +83,6 @@ void treatRequest(int socket_fd/*, char* req*/) {
     printf("%s\n", infos);
 
     // check if lobby ready
+
+    return NULL;
 }
