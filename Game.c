@@ -72,3 +72,21 @@ int putClientInLobby(int client_socket_fd, int lobbyId) {
     }
     return 0;
 }
+
+int removeClientFromLobby(int client_socket_fd, int lobbyId) {
+    struct Lobby* chosenLobby = getLobbyById(lobbyId);
+    if (chosenLobby->client_1_socket_fd == client_socket_fd) {
+        chosenLobby->client_1_socket_fd = -1;
+        return 1;
+    } else if (chosenLobby->client_2_socket_fd == client_socket_fd) {
+        chosenLobby->client_2_socket_fd = -1;
+        return 1;
+    } else if (chosenLobby->client_3_socket_fd == client_socket_fd) {
+        chosenLobby->client_3_socket_fd = -1;
+        return 1;
+    } else if (chosenLobby->client_4_socket_fd == client_socket_fd) {
+        chosenLobby->client_4_socket_fd = -1;
+        return 1;
+    }
+    return 0;
+}

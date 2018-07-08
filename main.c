@@ -54,7 +54,7 @@ void* treatRequest(void* arg) {
     lobbyInfoResponse = malloc(sizeof(char) * nb_char);
     char chosenLobbyId[10];
     char recvline[10];
-    int lobbyId = 0;
+    int currentLobbyId = 0;
 
     int quit = 0;
 
@@ -69,8 +69,12 @@ void* treatRequest(void* arg) {
             write(socket_fd, lobbyInfoResponse, strlen(lobbyInfoResponse)+1);
 
         } else if (strcmp(recvline, "%") != 0) {
-            lobbyId = atoi(recvline);
+            int lobbyId = atoi(recvline);
+            if ((currentLobbyId != 0) && (lobbyId != currentLobbyId)) {
+                removeClientFromLobby(socket_fd, currentLobbyId);
+            }
             int lobbyRes = putClientInLobby(socket_fd, lobbyId);
+            currentLobbyId = lobbyId;
             if (!lobbyRes) {
                 write(socket_fd, "NOK", 4);
             } else {
