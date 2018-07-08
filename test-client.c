@@ -30,8 +30,13 @@ int main(int argc,char **argv)
     write(sockfd, "get-rooms", 11);
     read(sockfd, recvline, 100);
     printf("%s\n", recvline);
+
     write(sockfd, "1", 1);
     printf("Choosen lobby sent.\n");
+    read(sockfd, recvline, 100);
+    printf("%s\n", recvline);
+
+    write(sockfd, "get-rooms", 11);
     read(sockfd, recvline, 100);
     printf("%s\n", recvline);
 }
