@@ -19,3 +19,5 @@ void getLobbiesInfo(char* response);
 void initLobbies();
 int isLobbyReady(struct Lobby lobby);
 void game();
+int putClientInLobby(int client_socket_fd, int lobbyId);
+int removeClientFromLobby(int client_socket_fd, int lobbyId);

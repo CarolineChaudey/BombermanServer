@@ -47,46 +47,45 @@ int main() {
     return 0;
 }
 
-void* treatRequest(/*int socket_fd*/void* arg) {
-    //printf("%d\n", (int) arg);
+void* treatRequest(void* arg) {
     int socket_fd = (int) arg;
     int nb_char = NB_ROOM * 6;
     char* lobbyInfoResponse;
     lobbyInfoResponse = malloc(sizeof(char) * nb_char);
     char chosenLobbyId[10];
     char recvline[10];
+    int currentLobbyId = 0;
 
-    // give lobbies info to client
-    read(socket_fd, recvline, 10);
-    getLobbiesInfo(lobbyInfoResponse);
-    write(socket_fd, lobbyInfoResponse, strlen(lobbyInfoResponse)+1);
+    int quit = 0;
+
+    while (!quit) {
+        bzero(recvline, 10);
+        read(socket_fd, recvline, 10);
+
+        if (strcmp(recvline, "get-rooms") == 0) {
+            printf("get-rooms\n");
+            read(socket_fd, recvline, 10);
+            getLobbiesInfo(lobbyInfoResponse);
+            write(socket_fd, lobbyInfoResponse, strlen(lobbyInfoResponse)+1);
+
+        } else if (strcmp(recvline, "%") != 0) {
+            int lobbyId = atoi(recvline);
+            if ((currentLobbyId != 0) && (lobbyId != currentLobbyId)) {
+                removeClientFromLobby(socket_fd, currentLobbyId);
+            }
+            int lobbyRes = putClientInLobby(socket_fd, lobbyId);
+            currentLobbyId = lobbyId;
+            if (!lobbyRes) {
+                write(socket_fd, "NOK", 4);
+            } else {
+                write(socket_fd, "OK", 3);
+                if (isLobbyReady(*getLobbyById(lobbyId))) {
+                    game();
+                }
+            }
+        }
+    }
+
     free(lobbyInfoResponse);
-
-    // get lobby choice from client
-    bzero(chosenLobbyId, 10);
-    
-    do {
-        read(socket_fd, chosenLobbyId, 10);
-        printf("%s\n", chosenLobbyId);
-    } while(strcmp(chosenLobbyId, "%") == 0);
-
-    printf("lobby choosed : %s\n", chosenLobbyId);
-    int lobbyId = atoi(chosenLobbyId);
-    int lobbyRes = putClientInLobby(socket_fd, lobbyId);
-    if (!lobbyRes) {
-        write(socket_fd, "NOK", 4);
-    } else {
-        write(socket_fd, "OK", 3);
-    }
-
-    char infos[15];
-    getLobbiesInfo(infos);
-    printf("%s\n", infos);
-
-    // check if lobby ready
-    if (isLobbyReady(*getLobbyById(lobbyId))) {
-        game();
-    }
-
     return NULL;
 }
