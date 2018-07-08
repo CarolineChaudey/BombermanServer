@@ -54,12 +54,11 @@ void* treatRequest(void* arg) {
     lobbyInfoResponse = malloc(sizeof(char) * nb_char);
     char chosenLobbyId[10];
     char recvline[10];
+    int lobbyId = 0;
 
-    int l = 0;
-    //printf("before loop\n");
+    int quit = 0;
 
-    while (!l) {
-        //printf("loop");
+    while (!quit) {
         bzero(recvline, 10);
         read(socket_fd, recvline, 10);
 
@@ -70,8 +69,7 @@ void* treatRequest(void* arg) {
             write(socket_fd, lobbyInfoResponse, strlen(lobbyInfoResponse)+1);
 
         } else if (strcmp(recvline, "%") != 0) {
-            int lobbyId = atoi(recvline);
-            //printf("%d", lobbyId);
+            lobbyId = atoi(recvline);
             int lobbyRes = putClientInLobby(socket_fd, lobbyId);
             if (!lobbyRes) {
                 write(socket_fd, "NOK", 4);
