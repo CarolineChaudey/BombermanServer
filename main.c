@@ -64,7 +64,6 @@ void* treatRequest(void* arg) {
 
         if (strcmp(recvline, "get-rooms") == 0) {
             printf("get-rooms\n");
-            read(socket_fd, recvline, 10);
             getLobbiesInfo(lobbyInfoResponse);
             write(socket_fd, lobbyInfoResponse, strlen(lobbyInfoResponse)+1);
 
