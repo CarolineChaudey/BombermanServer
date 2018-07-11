@@ -40,7 +40,10 @@ int main(int argc,char **argv)
     read(sockfd, recvline, 100);
     printf("%s\n", recvline);
 
-    write(sockfd, "2", 1);
+    int roomId = 2;
+    char str[10];
+    sprintf(str, "%d", roomId);
+    write(sockfd, (void*) str, 10);
     printf("Choosen lobby sent.\n");
     read(sockfd, recvline, 100);
     printf("%s\n", recvline);
@@ -48,4 +51,5 @@ int main(int argc,char **argv)
     write(sockfd, "get-rooms", 11);
     read(sockfd, recvline, 100);
     printf("%s\n", recvline);
+    while (1) {};
 }

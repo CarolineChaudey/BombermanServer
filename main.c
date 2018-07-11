@@ -68,6 +68,7 @@ void* treatRequest(void* arg) {
             write(socket_fd, lobbyInfoResponse, strlen(lobbyInfoResponse)+1);
 
         } else if (strcmp(recvline, "%") != 0) {
+            printf("Received %s\n", recvline);
             int lobbyId = atoi(recvline);
             if ((currentLobbyId != 0) && (lobbyId != currentLobbyId)) {
                 removeClientFromLobby(socket_fd, currentLobbyId);
