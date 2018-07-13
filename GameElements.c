@@ -28,12 +28,6 @@ struct Playground {
     char *layer3;
 } playground;
 
-struct Room {
-    int id;
-    struct Playground playground;
-    struct Player* players;
-} room;
-
 struct Lobby {
     int client_1_socket_fd;
     int client_2_socket_fd;

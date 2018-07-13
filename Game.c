@@ -1,14 +1,33 @@
 #include "Game.h"
 
 void readMap(char *res) {
-
+    int c;
+    int i = 0;
+    FILE *file;
+    file = fopen("BonBeurreMap1.txt", "r");
+    if (file) {
+        while ((c = getc(file)) != EOF) {
+            res[i] = c;
+            i++;
+        }
+        fclose(file);
+    }
 }
 
 void game(struct Lobby *lobby) {
     printf("Game begins.\n");
     struct Playground pground;
+
     char rawData[1100];
     readMap(rawData);
+    printf("%s", rawData);
+
+    // send map to clients
+    write(lobby->client_1_socket_fd, (void*) rawData, strlen(rawData)+1);
+    write(lobby->client_2_socket_fd, (void*) rawData, strlen(rawData)+1);
+    write(lobby->client_3_socket_fd, (void*) rawData, strlen(rawData)+1);
+    write(lobby->client_4_socket_fd, (void*) rawData, strlen(rawData)+1);
+    
 }
 
 int getNbPlayers(struct Lobby* lobby) {

@@ -51,6 +51,11 @@ int main(int argc,char **argv)
     write(sockfd, "get-rooms", 11);
     read(sockfd, recvline, 100);
     printf("%s\n", recvline);
-    close(sockfd);
-    //while (1) {};
+
+    // get map
+    char recvmap[1100];
+    read(sockfd, recvmap, 100);
+    printf("%s\n", recvmap);
+    //close(sockfd);
+    while (1) {};
 }

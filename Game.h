@@ -10,7 +10,6 @@
 #define MAX_PLAYERS_PER_ROOM     4
 
 
-struct Room rooms[2];
 struct Lobby lobbies[2];
 
 int getNbPlayers(struct Lobby* lobby);
