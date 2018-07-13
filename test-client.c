@@ -52,10 +52,6 @@ int main(int argc,char **argv)
     read(sockfd, recvline, 100);
     printf("%s\n", recvline);
 
-    // get map
-    char recvmap[1100];
-    read(sockfd, recvmap, 100);
-    printf("%s\n", recvmap);
     //close(sockfd);
     while (1) {};
 }

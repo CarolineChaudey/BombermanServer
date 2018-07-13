@@ -1,15 +1,62 @@
 #include "Game.h"
 
-void readMap(char *res) {
-    int c;
-    int i = 0;
+void initMap(char *res, struct Playground pground) {
+    char c;
     FILE *file;
     file = fopen("BonBeurreMap1.txt", "r");
     if (file) {
-        while ((c = getc(file)) != EOF) {
-            res[i] = c;
+        // get map data
+        char mapData[100];
+        int i = 0;
+        while ((c = getc(file)) != '\n') {
+            mapData[i] = c;
             i++;
         }
+        pground.mapInfo = mapData;
+        printf("Map data : %s\n", pground.mapInfo);
+        // get layer 1
+        char layer1[350];
+        i = 0;
+        int nbLines = 0;
+        while (nbLines < 10) {
+            c = getc(file);
+            if (c == '\n') {
+                nbLines++;
+            }
+            layer1[i] = c;
+            i++;
+        }
+        pground.layer1 = layer1;
+        printf("Layer 1 : %s\n", layer1);
+        // get layer 2
+        char layer2[500];
+        i = 0;
+        nbLines = 0;
+        while (nbLines < 10) {
+            c = getc(file);
+            if (c == '\n') {
+                nbLines++;
+            }
+            layer2[i] = c;
+            i++;
+        }
+        pground.layer2 = layer2;
+        printf("Layer 2 : %s\n", layer2);
+        // get layer 3
+        char layer3[200];
+        i = 0;
+        nbLines = 0;
+        while (nbLines < 10) {
+            c = getc(file);
+            if (c == '\n') {
+                nbLines++;
+            }
+            layer3[i] = c;
+            i++;
+        }
+        pground.layer3 = layer3;
+        printf("Layer 3 : %s\n", layer3);
+
         fclose(file);
     }
 }
@@ -19,14 +66,8 @@ void game(struct Lobby *lobby) {
     struct Playground pground;
 
     char rawData[1100];
-    readMap(rawData);
+    initMap(rawData, pground);
     printf("%s", rawData);
-
-    // send map to clients
-    write(lobby->client_1_socket_fd, (void*) rawData, strlen(rawData)+1);
-    write(lobby->client_2_socket_fd, (void*) rawData, strlen(rawData)+1);
-    write(lobby->client_3_socket_fd, (void*) rawData, strlen(rawData)+1);
-    write(lobby->client_4_socket_fd, (void*) rawData, strlen(rawData)+1);
     
 }
 
