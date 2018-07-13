@@ -18,6 +18,6 @@ struct Lobby* getLobbyById(int id);
 void getLobbiesInfo(char* response);
 void initLobbies();
 int isLobbyReady(struct Lobby lobby);
-void game();
+void game(struct Lobby *lobby);
 int putClientInLobby(int client_socket_fd, int lobbyId);
 int removeClientFromLobby(int client_socket_fd, int lobbyId);

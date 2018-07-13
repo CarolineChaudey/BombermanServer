@@ -1,7 +1,14 @@
 #include "Game.h"
 
-void game() {
+void readMap(char *res) {
+
+}
+
+void game(struct Lobby *lobby) {
     printf("Game begins.\n");
+    struct Playground pground;
+    char rawData[1100];
+    readMap(rawData);
 }
 
 int getNbPlayers(struct Lobby* lobby) {
