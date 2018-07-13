@@ -61,9 +61,6 @@ void* treatRequest(void* arg) {
     while (!quit) {
         bzero(recvline, 10);
         int readRes = read(socket_fd, recvline, 10);
-        if (readRes == -1) {
-            printf("Deconnection ?");
-        }
 
         // wants rooms data
         if (strcmp(recvline, "get-rooms") == 0) {
