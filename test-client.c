@@ -51,5 +51,6 @@ int main(int argc,char **argv)
     write(sockfd, "get-rooms", 11);
     read(sockfd, recvline, 100);
     printf("%s\n", recvline);
-    while (1) {};
+    close(sockfd);
+    //while (1) {};
 }

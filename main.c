@@ -60,14 +60,21 @@ void* treatRequest(void* arg) {
 
     while (!quit) {
         bzero(recvline, 10);
-        read(socket_fd, recvline, 10);
+        int readRes = read(socket_fd, recvline, 10);
 
+        // wants rooms data
         if (strcmp(recvline, "get-rooms") == 0) {
             printf("get-rooms\n");
             getLobbiesInfo(lobbyInfoResponse);
             write(socket_fd, lobbyInfoResponse, strlen(lobbyInfoResponse)+1);
-
-        } else if (strcmp(recvline, "%") != 0) {
+        }
+        // disconnected
+        else if (strcmp(recvline, "") == 0) {
+            removeClientFromLobby(socket_fd, currentLobbyId);
+            quit = 1;
+        }
+        // choosed a room
+        else if ((strcmp(recvline, "%") != 0)) {
             printf("Received %s\n", recvline);
             int lobbyId = atoi(recvline);
             if ((currentLobbyId != 0) && (lobbyId != currentLobbyId)) {
@@ -85,7 +92,7 @@ void* treatRequest(void* arg) {
             }
         }
     }
-
+    printf("Closing thread.\n");
     free(lobbyInfoResponse);
     return NULL;
 }
