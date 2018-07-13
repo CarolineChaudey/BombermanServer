@@ -1,62 +1,29 @@
 #include "Game.h"
 
+void getMapDimensions(FILE *file, int *dimensions) {
+    char line[15];
+    char *chunk;
+    fgets(line, 15, file);
+    printf("%s\n", line);
+    // jump to first data
+    chunk = strtok(line, " ");
+    while(strcmp(chunk, "0") == 0) {
+        chunk = strtok(NULL, " ");
+    }
+    dimensions[0] = atoi(chunk);
+    strtok(line, " ");
+    dimensions[1] = atoi(chunk);
+}
+
 void initMap(char *res, struct Playground pground) {
     char c;
+    int dimensions[2];
     FILE *file;
     file = fopen("BonBeurreMap1.txt", "r");
     if (file) {
-        // get map data
-        char mapData[100];
-        int i = 0;
-        while ((c = getc(file)) != '\n') {
-            mapData[i] = c;
-            i++;
-        }
-        pground.mapInfo = mapData;
-        printf("Map data : %s\n", pground.mapInfo);
-        // get layer 1
-        char layer1[350];
-        i = 0;
-        int nbLines = 0;
-        while (nbLines < 10) {
-            c = getc(file);
-            if (c == '\n') {
-                nbLines++;
-            }
-            layer1[i] = c;
-            i++;
-        }
-        pground.layer1 = layer1;
-        printf("Layer 1 : %s\n", layer1);
-        // get layer 2
-        char layer2[500];
-        i = 0;
-        nbLines = 0;
-        while (nbLines < 10) {
-            c = getc(file);
-            if (c == '\n') {
-                nbLines++;
-            }
-            layer2[i] = c;
-            i++;
-        }
-        pground.layer2 = layer2;
-        printf("Layer 2 : %s\n", layer2);
-        // get layer 3
-        char layer3[200];
-        i = 0;
-        nbLines = 0;
-        while (nbLines < 10) {
-            c = getc(file);
-            if (c == '\n') {
-                nbLines++;
-            }
-            layer3[i] = c;
-            i++;
-        }
-        pground.layer3 = layer3;
-        printf("Layer 3 : %s\n", layer3);
-
+        getMapDimensions(file, dimensions);
+        printf("%dx%d\n", dimensions[0], dimensions[1]);
+        char line[50];
         fclose(file);
     }
 }
