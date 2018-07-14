@@ -87,7 +87,7 @@ void* treatRequest(void* arg) {
             } else {
                 write(socket_fd, "OK", 3);
                 if (isLobbyReady(*getLobbyById(lobbyId))) {
-                    game();
+                    game(getLobbyById(lobbyId));
                 }
             }
         }

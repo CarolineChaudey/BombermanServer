@@ -1,7 +1,122 @@
 #include "Game.h"
 
-void game() {
+void getMapDimensions(FILE *file, int *dimensions) {
+    char line[15];
+    char *chunk;
+    fgets(line, 15, file);
+    // jump to first data
+    chunk = strtok(line, " ");
+    while(strcmp(chunk, "0") == 0) {
+        chunk = strtok(NULL, " ");
+    }
+    dimensions[0] = atoi(chunk);
+    strtok(line, " ");
+    dimensions[1] = atoi(chunk);
+}
+
+void initLayer(int ***layer, int *dimensions) {
+    *layer = malloc(sizeof(int *) * dimensions[0]);
+
+    for (int i = 0; i < dimensions[0]; i++) {
+        *(*layer + i) = malloc(sizeof(int) * dimensions[1]);
+        for (int j = 0; j < dimensions[1]; j++) {
+            *(*(*layer + i) + j) = 0;
+        }
+    }
+}
+
+
+void displayLayer(int **layer, int *dimensions) {
+    printf("displayLayer\n");
+    for (int i = 0; i < dimensions[0]; i++) {
+        for (int j = 0; j < dimensions[1]; j++) {
+            printf("%d-", layer[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void initMap(struct Playground pground) {
+    char c;
+    int dimensions[2];
+    FILE *file;
+    file = fopen("BonBeurreMap1.txt", "r");
+    if (file) {
+        getMapDimensions(file, dimensions);
+        printf("%dx%d\n", dimensions[0], dimensions[1]);
+
+        initLayer(&pground.layer1, dimensions);
+        initLayer(&pground.layer2, dimensions);
+        initLayer(&pground.layer3, dimensions);
+        
+        char line[60];
+        fgets(line, 60, file); // passe la ligne des infos
+        // layer 1
+        for (int i = 0; i < dimensions[0]; i++) {
+            fgets(line, 60, file);
+            // retirer le \n
+            line[strlen(line) - 1] = 0;
+            // prendre chaque "case"
+            char *chunk;
+            chunk = strtok(line, " ");
+            int j = 0;
+            while (chunk != NULL) {
+                int nb = atoi(chunk);
+                pground.layer1[i][j] = nb;
+                chunk = strtok(NULL, " ");
+                j++;
+            }
+        }
+
+        // layer 2
+        for (int i = 0; i < dimensions[0]; i++) {
+            fgets(line, 60, file);
+            // retirer le \n
+            line[strlen(line) - 1] = 0;
+            // prendre chaque "case"
+            char *chunk;
+            chunk = strtok(line, " ");
+            int j = 0;
+            while (chunk != NULL) {
+                int nb = atoi(chunk);
+                pground.layer2[i][j] = nb;
+                chunk = strtok(NULL, " ");
+                j++;
+            }
+        }
+
+        // layer 3
+        for (int i = 0; i < dimensions[0]; i++) {
+            fgets(line, 60, file);
+            // retirer le \n
+            line[strlen(line) - 1] = 0;
+            // prendre chaque "case"
+            char *chunk;
+            chunk = strtok(line, " ");
+            int j = 0;
+            while (chunk != NULL) {
+                int nb = atoi(chunk);
+                pground.layer3[i][j] = nb;
+                chunk = strtok(NULL, " ");
+                j++;
+            }
+        }
+
+        displayLayer(pground.layer1, dimensions);
+        displayLayer(pground.layer2, dimensions);
+        displayLayer(pground.layer3, dimensions);
+        
+        fclose(file);
+    }
+}
+
+void game(struct Lobby *lobby) {
     printf("Game begins.\n");
+    struct Playground pground;
+
+    char rawData[1100];
+    initMap(pground);
+    
 }
 
 int getNbPlayers(struct Lobby* lobby) {
