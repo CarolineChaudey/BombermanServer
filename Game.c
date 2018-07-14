@@ -19,6 +19,9 @@ void initLayer(int ***layer, int *dimensions) {
 
     for (int i = 0; i < dimensions[0]; i++) {
         *(*layer + i) = malloc(sizeof(int) * dimensions[1]);
+        for (int j = 0; j < dimensions[1]; j++) {
+            *(*(*layer + i) + j) = 0;
+        }
     }
 }
 
@@ -43,6 +46,10 @@ void initMap(struct Playground pground) {
         printf("%dx%d\n", dimensions[0], dimensions[1]);
         initLayer(&pground.layer1, dimensions);
         displayLayer(pground.layer1, dimensions);
+        initLayer(&pground.layer2, dimensions);
+        displayLayer(pground.layer2, dimensions);
+        initLayer(&pground.layer3, dimensions);
+        displayLayer(pground.layer3, dimensions);
         /*
         char line[60];
         fgets(line, 60, file); // passe la ligne des infos
