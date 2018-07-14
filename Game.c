@@ -44,15 +44,14 @@ void initMap(struct Playground pground) {
     if (file) {
         getMapDimensions(file, dimensions);
         printf("%dx%d\n", dimensions[0], dimensions[1]);
+
         initLayer(&pground.layer1, dimensions);
-        displayLayer(pground.layer1, dimensions);
         initLayer(&pground.layer2, dimensions);
-        displayLayer(pground.layer2, dimensions);
         initLayer(&pground.layer3, dimensions);
-        displayLayer(pground.layer3, dimensions);
-        /*
+        
         char line[60];
         fgets(line, 60, file); // passe la ligne des infos
+        // layer 1
         for (int i = 0; i < dimensions[0]; i++) {
             fgets(line, 60, file);
             // retirer le \n
@@ -60,14 +59,53 @@ void initMap(struct Playground pground) {
             // prendre chaque "case"
             char *chunk;
             chunk = strtok(line, " ");
+            int j = 0;
             while (chunk != NULL) {
                 int nb = atoi(chunk);
-                printf("%d-", nb);
+                pground.layer1[i][j] = nb;
                 chunk = strtok(NULL, " ");
+                j++;
             }
-            printf("\n");
         }
-        */
+
+        // layer 2
+        for (int i = 0; i < dimensions[0]; i++) {
+            fgets(line, 60, file);
+            // retirer le \n
+            line[strlen(line) - 1] = 0;
+            // prendre chaque "case"
+            char *chunk;
+            chunk = strtok(line, " ");
+            int j = 0;
+            while (chunk != NULL) {
+                int nb = atoi(chunk);
+                pground.layer2[i][j] = nb;
+                chunk = strtok(NULL, " ");
+                j++;
+            }
+        }
+
+        // layer 3
+        for (int i = 0; i < dimensions[0]; i++) {
+            fgets(line, 60, file);
+            // retirer le \n
+            line[strlen(line) - 1] = 0;
+            // prendre chaque "case"
+            char *chunk;
+            chunk = strtok(line, " ");
+            int j = 0;
+            while (chunk != NULL) {
+                int nb = atoi(chunk);
+                pground.layer3[i][j] = nb;
+                chunk = strtok(NULL, " ");
+                j++;
+            }
+        }
+
+        displayLayer(pground.layer1, dimensions);
+        displayLayer(pground.layer2, dimensions);
+        displayLayer(pground.layer3, dimensions);
+        
         fclose(file);
     }
 }
