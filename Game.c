@@ -4,7 +4,6 @@ void getMapDimensions(FILE *file, int *dimensions) {
     char line[15];
     char *chunk;
     fgets(line, 15, file);
-    printf("%s\n", line);
     // jump to first data
     chunk = strtok(line, " ");
     while(strcmp(chunk, "0") == 0) {
@@ -15,7 +14,26 @@ void getMapDimensions(FILE *file, int *dimensions) {
     dimensions[1] = atoi(chunk);
 }
 
-void initMap(char *res, struct Playground pground) {
+void initLayer(int ***layer, int *dimensions) {
+    *layer = malloc(sizeof(int *) * dimensions[0]);
+
+    for (int i = 0; i < dimensions[0]; i++) {
+        *(*layer + i) = malloc(sizeof(int) * dimensions[1]);
+    }
+}
+
+
+void displayLayer(int **layer, int *dimensions) {
+    printf("displayLayer\n");
+    for (int i = 0; i < dimensions[0]; i++) {
+        for (int j = 0; j < dimensions[1]; j++) {
+            printf("%d-", layer[i][j]);
+        }
+        printf("\n");
+    }
+}
+
+void initMap(struct Playground pground) {
     char c;
     int dimensions[2];
     FILE *file;
@@ -23,7 +41,26 @@ void initMap(char *res, struct Playground pground) {
     if (file) {
         getMapDimensions(file, dimensions);
         printf("%dx%d\n", dimensions[0], dimensions[1]);
-        char line[50];
+        initLayer(&pground.layer1, dimensions);
+        displayLayer(pground.layer1, dimensions);
+        /*
+        char line[60];
+        fgets(line, 60, file); // passe la ligne des infos
+        for (int i = 0; i < dimensions[0]; i++) {
+            fgets(line, 60, file);
+            // retirer le \n
+            line[strlen(line) - 1] = 0;
+            // prendre chaque "case"
+            char *chunk;
+            chunk = strtok(line, " ");
+            while (chunk != NULL) {
+                int nb = atoi(chunk);
+                printf("%d-", nb);
+                chunk = strtok(NULL, " ");
+            }
+            printf("\n");
+        }
+        */
         fclose(file);
     }
 }
@@ -33,8 +70,7 @@ void game(struct Lobby *lobby) {
     struct Playground pground;
 
     char rawData[1100];
-    initMap(rawData, pground);
-    printf("%s", rawData);
+    initMap(pground);
     
 }
 

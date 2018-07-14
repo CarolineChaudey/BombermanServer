@@ -23,9 +23,9 @@ struct Square {
 
 struct Playground {
     char *mapInfo;
-    char *layer1;
-    char *layer2;
-    char *layer3;
+    int **layer1;
+    int **layer2;
+    int **layer3;
 } playground;
 
 struct Lobby {
