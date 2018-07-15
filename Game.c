@@ -137,6 +137,7 @@ void emptyLobby(struct Lobby *lobby) {
     lobby->client_4_socket_fd = -1;
 }
 
+
 void game(struct Lobby *lobby) {
     printf("Game begins.\n");
     struct Playground pground;
@@ -145,9 +146,28 @@ void game(struct Lobby *lobby) {
     initMap(pground);
     
     sendToAllPlayers(lobby, "GO");
+    // put players in an array
+    int players[4];
+    players[0] = lobby->client_1_socket_fd;
+    players[1] = lobby->client_2_socket_fd;
+    players[2] = lobby->client_3_socket_fd;
+    players[3] = lobby->client_4_socket_fd;
 
     do {
-
+        for (int i = 0; i < 4; i++) {
+            int player_socket = players[i];
+            write(player_socket, "MOVE", 5);
+            char *action;
+            read(player_socket, action, 50);
+            // vérifier action ?
+            // TODO changer map
+            for (int j = 0; j < 4; j++) {
+                int sock = players[j];
+                // on dit aux autres joueurs quelle action a été faite
+                write(player_socket, action, sizeof(action) + 1);
+                // TODO verify if player died
+            }
+        }
     } while (getNbPlayers(lobby) > 1);
     int winner_socket = getWinner(lobby);
     emptyLobby(lobby);
