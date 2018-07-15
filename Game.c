@@ -140,11 +140,8 @@ void emptyLobby(struct Lobby *lobby) {
 
 void game(struct Lobby *lobby) {
     printf("Game begins.\n");
-    struct Playground pground;
 
-    char rawData[1100];
-    initMap(pground);
-    
+   struct Playground pground = lobby->playground;
     sendToAllPlayers(lobby, "GO");
     // put players in an array
     int players[4];
@@ -213,6 +210,24 @@ void initLobbies() {
         lobby.client_2_socket_fd = -1;
         lobby.client_3_socket_fd = -1;
         lobby.client_4_socket_fd = -1;
+
+        struct Playground pground;
+        initMap(pground);
+        // init players
+        lobby.playground = pground;
+        lobby.playground.players[0].nb = 1;
+        lobby.playground.players[0].x = 1;
+        lobby.playground.players[0].y = 1;
+        lobby.playground.players[1].nb = 2;
+        lobby.playground.players[1].x = 1;
+        lobby.playground.players[1].y = 8;
+        lobby.playground.players[2].nb = 3;
+        lobby.playground.players[2].x = 8;
+        lobby.playground.players[2].y = 1;
+        lobby.playground.players[3].nb = 4;
+        lobby.playground.players[3].x = 8;
+        lobby.playground.players[3].y = 8;
+
         lobbies[i] = lobby;
     }
 }
@@ -228,15 +243,19 @@ int putClientInLobby(int client_socket_fd, int lobbyId) {
     struct Lobby* chosenLobby = getLobbyById(lobbyId);
     if ((chosenLobby->client_1_socket_fd == -1) || (chosenLobby->client_1_socket_fd == client_socket_fd)) {
         chosenLobby->client_1_socket_fd = client_socket_fd;
+        chosenLobby->playground.players[0].socket = client_socket_fd;
         return 1;
     } else if ((chosenLobby->client_2_socket_fd == -1) || (chosenLobby->client_2_socket_fd == client_socket_fd)) {
         chosenLobby->client_2_socket_fd = client_socket_fd;
+        chosenLobby->playground.players[1].socket = client_socket_fd;
         return 2;
     } else if ((chosenLobby->client_3_socket_fd == -1) || (chosenLobby->client_3_socket_fd == client_socket_fd)) {
         chosenLobby->client_3_socket_fd = client_socket_fd;
+        chosenLobby->playground.players[2].socket = client_socket_fd;
         return 3;
     } else if ((chosenLobby->client_4_socket_fd == -1) || (chosenLobby->client_4_socket_fd == client_socket_fd)) {
         chosenLobby->client_4_socket_fd = client_socket_fd;
+        chosenLobby->playground.players[3].socket = client_socket_fd;
         return 4;
     }
     return 0;

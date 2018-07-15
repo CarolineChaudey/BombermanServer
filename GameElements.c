@@ -15,6 +15,9 @@ struct Bomb {
 
 struct Player {
     int nb;
+    int socket;
+    int x;
+    int y;
 } player;
 
 struct Square {
@@ -26,6 +29,7 @@ struct Playground {
     int **layer1;
     int **layer2;
     int **layer3;
+    struct Player players[4];
 } playground;
 
 struct Lobby {
@@ -33,4 +37,5 @@ struct Lobby {
     int client_2_socket_fd;
     int client_3_socket_fd;
     int client_4_socket_fd;
+    struct Playground playground;
 } lobby;

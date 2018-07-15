@@ -39,7 +39,7 @@ int main(int argc,char **argv)
     write(sockfd, "get-rooms", 11);
     read(sockfd, recvline, 100);
     printf("%s\n", recvline);
-
+/*
     int roomId = 2;
     char str[10];
     sprintf(str, "%d", roomId);
@@ -51,7 +51,7 @@ int main(int argc,char **argv)
     write(sockfd, "get-rooms", 11);
     read(sockfd, recvline, 100);
     printf("%s\n", recvline);
-
+*/
     //close(sockfd);
     read(sockfd, recvline, 100);
     printf("%s\n", recvline);

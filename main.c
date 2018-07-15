@@ -81,6 +81,7 @@ void* treatRequest(void* arg) {
                 removeClientFromLobby(socket_fd, currentLobbyId);
             }
             int idPlayer = putClientInLobby(socket_fd, lobbyId);
+            // prévenir autres joueurs du lobby
             currentLobbyId = lobbyId;
             if (!idPlayer) {
                 write(socket_fd, "NOK", 4);
