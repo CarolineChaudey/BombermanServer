@@ -15,6 +15,9 @@ struct Bomb {
 
 struct Player {
     int nb;
+    int socket;
+    int x;
+    int y;
 } player;
 
 struct Square {
