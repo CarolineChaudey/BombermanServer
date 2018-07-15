@@ -53,5 +53,7 @@ int main(int argc,char **argv)
     printf("%s\n", recvline);
 
     //close(sockfd);
+    read(sockfd, recvline, 100);
+    printf("%s\n", recvline);
     while (1) {};
 }

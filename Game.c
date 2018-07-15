@@ -110,6 +110,13 @@ void initMap(struct Playground pground) {
     }
 }
 
+void sendToAllPlayers(struct Lobby *lobby, char *msg) {
+    write(lobby->client_1_socket_fd, msg, sizeof(msg) + 1);
+    write(lobby->client_2_socket_fd, msg, sizeof(msg) + 1);
+    write(lobby->client_3_socket_fd, msg, sizeof(msg) + 1);
+    write(lobby->client_4_socket_fd, msg, sizeof(msg) + 1);
+}
+
 void game(struct Lobby *lobby) {
     printf("Game begins.\n");
     struct Playground pground;
@@ -117,6 +124,7 @@ void game(struct Lobby *lobby) {
     char rawData[1100];
     initMap(pground);
     
+    sendToAllPlayers(lobby, "GO");
 }
 
 int getNbPlayers(struct Lobby* lobby) {
