@@ -110,11 +110,31 @@ void initMap(struct Playground pground) {
     }
 }
 
+int getWinner(struct Lobby *lobby) {
+    if (lobby->client_1_socket_fd != -1) {
+        return lobby->client_1_socket_fd;
+    } else if (lobby->client_2_socket_fd != -1) {
+        return lobby->client_2_socket_fd;
+    } else if (lobby->client_3_socket_fd != -1) {
+        return lobby->client_3_socket_fd;
+    } else if (lobby->client_4_socket_fd != -1) {
+        return lobby->client_4_socket_fd;
+    }
+    return 0;
+}
+
 void sendToAllPlayers(struct Lobby *lobby, char *msg) {
     write(lobby->client_1_socket_fd, msg, sizeof(msg) + 1);
     write(lobby->client_2_socket_fd, msg, sizeof(msg) + 1);
     write(lobby->client_3_socket_fd, msg, sizeof(msg) + 1);
     write(lobby->client_4_socket_fd, msg, sizeof(msg) + 1);
+}
+
+void emptyLobby(struct Lobby *lobby) {
+    lobby->client_1_socket_fd = -1;
+    lobby->client_2_socket_fd = -1;
+    lobby->client_3_socket_fd = -1;
+    lobby->client_4_socket_fd = -1;
 }
 
 void game(struct Lobby *lobby) {
@@ -125,6 +145,12 @@ void game(struct Lobby *lobby) {
     initMap(pground);
     
     sendToAllPlayers(lobby, "GO");
+
+    do {
+
+    } while (getNbPlayers(lobby) > 1);
+    int winner_socket = getWinner(lobby);
+    emptyLobby(lobby);
 }
 
 int getNbPlayers(struct Lobby* lobby) {
