@@ -101,10 +101,6 @@ void initMap(struct Playground pground) {
                 j++;
             }
         }
-
-        displayLayer(pground.layer1, dimensions);
-        displayLayer(pground.layer2, dimensions);
-        displayLayer(pground.layer3, dimensions);
         
         fclose(file);
     }
@@ -180,20 +176,26 @@ int isLobbyReady(struct Lobby lobby) {
 
 int putClientInLobby(int client_socket_fd, int lobbyId) {
     struct Lobby* chosenLobby = getLobbyById(lobbyId);
+    int addedPlayer = 0;
     if ((chosenLobby->client_1_socket_fd == -1) || (chosenLobby->client_1_socket_fd == client_socket_fd)) {
         chosenLobby->client_1_socket_fd = client_socket_fd;
-        return 1;
+        addedPlayer = 1;
     } else if ((chosenLobby->client_2_socket_fd == -1) || (chosenLobby->client_2_socket_fd == client_socket_fd)) {
         chosenLobby->client_2_socket_fd = client_socket_fd;
-        return 1;
+        addedPlayer = 2;
     } else if ((chosenLobby->client_3_socket_fd == -1) || (chosenLobby->client_3_socket_fd == client_socket_fd)) {
         chosenLobby->client_3_socket_fd = client_socket_fd;
-        return 1;
+        addedPlayer = 3;
     } else if ((chosenLobby->client_4_socket_fd == -1) || (chosenLobby->client_4_socket_fd == client_socket_fd)) {
         chosenLobby->client_4_socket_fd = client_socket_fd;
-        return 1;
+        addedPlayer = 4;
     }
-    return 0;
+    if (addedPlayer) {
+        char res[10];
+        sprintf(res, "joined:%d", addedPlayer);
+        sendToAllPlayers(chosenLobby, res);
+    }
+    return addedPlayer;
 }
 
 int removeClientFromLobby(int client_socket_fd, int lobbyId) {
