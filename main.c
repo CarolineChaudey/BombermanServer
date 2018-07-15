@@ -80,12 +80,14 @@ void* treatRequest(void* arg) {
             if ((currentLobbyId != 0) && (lobbyId != currentLobbyId)) {
                 removeClientFromLobby(socket_fd, currentLobbyId);
             }
-            int lobbyRes = putClientInLobby(socket_fd, lobbyId);
+            int idPlayer = putClientInLobby(socket_fd, lobbyId);
             currentLobbyId = lobbyId;
-            if (!lobbyRes) {
+            if (!idPlayer) {
                 write(socket_fd, "NOK", 4);
             } else {
-                write(socket_fd, "OK", 3);
+                char res[2];
+                sprintf(res, "%d", idPlayer);
+                write(socket_fd, res, 3);
                 if (isLobbyReady(*getLobbyById(lobbyId))) {
                     game(getLobbyById(lobbyId));
                 }

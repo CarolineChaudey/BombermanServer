@@ -231,13 +231,13 @@ int putClientInLobby(int client_socket_fd, int lobbyId) {
         return 1;
     } else if ((chosenLobby->client_2_socket_fd == -1) || (chosenLobby->client_2_socket_fd == client_socket_fd)) {
         chosenLobby->client_2_socket_fd = client_socket_fd;
-        return 1;
+        return 2;
     } else if ((chosenLobby->client_3_socket_fd == -1) || (chosenLobby->client_3_socket_fd == client_socket_fd)) {
         chosenLobby->client_3_socket_fd = client_socket_fd;
-        return 1;
+        return 3;
     } else if ((chosenLobby->client_4_socket_fd == -1) || (chosenLobby->client_4_socket_fd == client_socket_fd)) {
         chosenLobby->client_4_socket_fd = client_socket_fd;
-        return 1;
+        return 4;
     }
     return 0;
 }
