@@ -137,7 +137,10 @@ int getNbPlayers(struct Lobby* lobby) {
 
 struct Lobby* getLobbyById(int id) {
     if ((id > 0) && (id <= NB_ROOM)) {
-        return &lobbies[id - 1];
+        pthread_mutex_lock(&mutex);
+        struct Lobby *result = &lobbies[id - 1];
+        pthread_mutex_unlock(&mutex);
+        return result;
     }
     return NULL;
 }
@@ -148,7 +151,9 @@ void getLobbiesInfo(char* response) {
         char lobby[6];
         lobby[0] = i + 1 + '0'; // lobby nb begins at 1
         lobby[1] = ':';
+        pthread_mutex_lock(&mutex);
         lobby[2] = getNbPlayers(&lobbies[i]) + '0';
+        pthread_mutex_unlock(&mutex);
         lobby[3] = '/';
         lobby[4] = '4';
         lobby[5] = ';';
@@ -163,7 +168,9 @@ void initLobbies() {
         lobby.client_2_socket_fd = -1;
         lobby.client_3_socket_fd = -1;
         lobby.client_4_socket_fd = -1;
+        pthread_mutex_lock(&mutex);
         lobbies[i] = lobby;
+        pthread_mutex_unlock(&mutex);
     }
 }
 

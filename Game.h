@@ -5,12 +5,14 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <pthread.h>
 
 #define NB_ROOM         2
 #define MAX_PLAYERS_PER_ROOM     4
 
 
 struct Lobby lobbies[2];
+pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 int getNbPlayers(struct Lobby* lobby);
 struct Lobby* getLobbyById(int id);
